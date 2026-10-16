@@ -3,372 +3,231 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>리본 유소년축구 허브</title>
+<title>Re:born Youth Football Hub</title>
 <meta name="description" content="유소년 축구대회 일정, 실시간 스코어, 경기 기록">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
-<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
+<meta name="theme-color" content="#0b0c0b">
+<link rel="stylesheet" href="brand.css">
 <style>
-  :root {
-    --bg: #f3f5f4; --surface: #ffffff; --surface-2: #f7f9f8; --line: #e3e8e5;
-    --ink: #0f1712; --ink-2: #4a5850; --ink-3: #7c8a82;
-    --accent: #0b7a4b; --accent-soft: #e4f2ea; --accent-ink: #ffffff;
-    --live: #e0362b; --yellow: #f2c230; --red: #d93025;
-    --shadow: 0 1px 2px rgb(15 40 25 / .05), 0 8px 24px rgb(15 40 25 / .06);
-    --radius: 16px; --radius-sm: 10px;
+  .hero { position: relative; border-bottom: 1px solid var(--line); overflow: hidden; }
+  .hero-photo { position: absolute; inset: 0 0 0 38%; background: center/cover no-repeat; background-image: linear-gradient(135deg, #1b1e1a, #0b0c0b); }
+  .hero-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, var(--black) 0%, rgb(11 12 11 / .55) 35%, rgb(11 12 11 / .1) 100%), linear-gradient(0deg, var(--black) 0%, transparent 40%); }
+  .hero .wrap { position: relative; padding-top: 72px; padding-bottom: 56px; }
+  .hero .kicker { font-size: clamp(16px, 2vw, 20px); font-weight: 600; margin: 0 0 28px; color: var(--ivory); }
+  .hero h1 { font-size: clamp(44px, 9.5vw, 112px); }
+  .hero h1 mark { display: inline-block; margin-top: .06em; padding: .02em .14em .0; }
+  .hero .lead { margin: 28px 0 0; max-width: 560px; color: var(--muted); font-size: 16px; }
+  .hero .lead b { color: var(--ivory); }
+  .tour { margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; padding-top: 18px; border-top: 1px solid var(--line); max-width: 640px; }
+  .tour h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; flex: 1 1 100%; }
+  .tour span { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 14px; }
+  @media (max-width: 760px) {
+    .hero-photo { inset: auto 0 0 0; height: 42%; }
+    .hero-photo::after { background: linear-gradient(0deg, transparent 0%, var(--black) 100%); }
+    .hero .wrap { padding-bottom: 260px; padding-top: 44px; }
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0c120f; --surface: #141c18; --surface-2: #19231e; --line: #24302a;
-      --ink: #eef3f0; --ink-2: #b3c1b9; --ink-3: #82928a;
-      --accent: #34c47f; --accent-soft: #163a28; --accent-ink: #06150d;
-      --live: #ff5a4e; --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px rgb(0 0 0 / .25);
-    }
-  }
-  * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--ink);
-         font-family: "Pretendard Variable", Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-         font-size: 15px; line-height: 1.5; letter-spacing: -0.01em; }
-  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
-  .num { font-variant-numeric: tabular-nums; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
+  .stat { padding: 22px var(--pad); border-left: 1px solid var(--line); }
+  .stat:first-child { border-left: 0; }
+  .stat b { display: block; font-size: clamp(34px, 5vw, 60px); font-weight: 1000; letter-spacing: -0.04em; line-height: 1; }
+  .stat.hot b { color: var(--turf); }
+  .stat .mono { color: var(--muted); display: block; margin-top: 8px; }
+  @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } .stat:nth-child(3) { border-left: 0; } .stat:nth-child(n+3) { border-top: 1px solid var(--line); } }
 
-  /* App bar */
-  .bar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--surface) 88%, transparent);
-         backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px);
-         border-bottom: 1px solid var(--line); }
-  .bar-in { max-width: 1120px; margin: 0 auto; height: 56px; padding: 0 16px; display: flex; align-items: center; gap: 10px; }
-  .mark { width: 30px; height: 30px; border-radius: 9px; background: var(--accent); color: var(--accent-ink);
-          display: grid; place-items: center; font-weight: 800; font-size: 15px; }
-  .brand { font-weight: 750; font-size: 16px; letter-spacing: -0.02em; }
-  .demo-tag { margin-left: auto; font-size: 12px; color: var(--ink-2); border: 1px solid var(--line);
-              padding: 3px 10px; border-radius: 999px; background: var(--surface); }
-
-  /* Hero */
-  .hero { position: relative; overflow: hidden; color: #fff; background: #0e2a1c; }
-  .hero-img { position: absolute; inset: 0; background: center/cover no-repeat;
-              background-image: linear-gradient(135deg, #12432c, #0b2117); }
-  .hero::after { content: ""; position: absolute; inset: 0;
-                 background: linear-gradient(180deg, rgb(5 15 10 / .15) 0%, rgb(5 15 10 / .55) 55%, rgb(5 15 10 / .85) 100%); }
-  .hero-in { position: relative; z-index: 1; max-width: 1120px; margin: 0 auto; padding: 72px 16px 28px; }
-  .hero h1 { margin: 0; font-size: clamp(26px, 5vw, 40px); line-height: 1.15; font-weight: 800; letter-spacing: -0.03em; }
-  .hero-meta { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; color: rgb(255 255 255 / .85); }
-  .hero-meta span { display: inline-flex; align-items: center; gap: 6px; }
-  .facts { margin-top: 22px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px;
-           background: rgb(255 255 255 / .16); border-radius: 14px; overflow: hidden; max-width: 560px; }
-  .fact { background: rgb(8 20 14 / .55); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 12px 14px; }
-  .fact b { display: block; font-size: 22px; font-weight: 800; line-height: 1.1; }
-  .fact small { font-size: 12px; color: rgb(255 255 255 / .72); }
-
-  /* Layout */
-  main { max-width: 1120px; margin: 0 auto; padding: 20px 16px 64px; display: grid; gap: 20px; }
-  @media (min-width: 1024px) { main { grid-template-columns: minmax(0, 1fr) 360px; align-items: start; } }
-  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
-  .panel-h { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 10px; }
-  .panel-h h2 { margin: 0; font-size: 17px; font-weight: 750; letter-spacing: -0.02em; }
-  .seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--line); border-radius: 999px; padding: 3px; }
-  .seg button { padding: 5px 12px; border-radius: 999px; font-size: 13px; color: var(--ink-2); font-weight: 600; }
-  .seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgb(0 0 0 / .08); }
-
-  .round { padding: 8px 18px; font-size: 12.5px; font-weight: 700; color: var(--ink-3); background: var(--surface-2);
-           border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .row { width: 100%; display: grid; grid-template-columns: 64px minmax(0, 1fr) 76px minmax(0, 1fr) 20px;
-         align-items: center; gap: 10px; padding: 14px 14px 14px 18px; text-align: left; transition: background .15s; }
-  .row + .row { border-top: 1px solid var(--line); }
-  .row:hover { background: var(--surface-2); }
-  .row:active { transform: scale(.995); }
-  .row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-  .st { font-size: 12px; color: var(--ink-3); font-weight: 600; line-height: 1.3; }
-  .st.live { color: var(--live); }
-  .side { display: flex; align-items: center; gap: 8px; min-width: 0; font-weight: 650; }
+  .cols { display: grid; gap: 40px; }
+  @media (min-width: 1000px) { .cols { grid-template-columns: minmax(0, 1fr) 380px; align-items: start; } }
+  .round { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--muted); margin-top: 8px; }
+  .row { width: 100%; display: grid; grid-template-columns: 76px minmax(0, 1fr) 96px minmax(0, 1fr) 40px; align-items: center; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--line); text-align: left; transition: background .15s, padding .15s; }
+  .row:hover { background: var(--soft); padding-left: 12px; padding-right: 12px; }
+  .row:hover .ring { background: var(--turf); border-color: var(--turf); color: var(--turf-ink); }
+  .when { font-family: var(--mono); font-size: 12px; color: var(--muted); line-height: 1.5; text-transform: uppercase; }
+  .when b { display: block; color: var(--ivory); font-size: 15px; font-weight: 700; }
+  .side { display: flex; align-items: center; gap: 12px; min-width: 0; font-weight: 800; font-size: 18px; letter-spacing: -0.02em; }
   .side.home { justify-content: flex-end; text-align: right; }
   .side span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .sc { text-align: center; font-size: 19px; font-weight: 800; letter-spacing: 0.02em; }
-  .sc.pre { font-size: 14px; color: var(--ink-2); font-weight: 650; }
-  .sc .w { color: var(--ink); } .sc .l { color: var(--ink-3); }
-  .chev { color: var(--ink-3); font-size: 16px; }
-  .live-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--live); margin-right: 5px; vertical-align: 1px; }
-  @media (prefers-reduced-motion: no-preference) { .live-dot { animation: pulse 1.6s ease-in-out infinite; } }
-  @keyframes pulse { 50% { opacity: .25; } }
+  .score { text-align: center; font-size: 32px; font-weight: 1000; letter-spacing: -0.03em; line-height: 1; }
+  .score .l { color: var(--dim); } .score.pre { font-size: 14px; color: var(--muted); font-weight: 700; letter-spacing: .06em; }
+  @media (max-width: 640px) {
+    .row { grid-template-columns: 52px minmax(0, 1fr) 70px minmax(0, 1fr); gap: 8px; }
+    .row .ring { display: none; } .side { font-size: 15px; gap: 7px; } .score { font-size: 24px; } .crest { width: 24px; height: 24px; font-size: 11px; }
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-family: var(--mono); font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--dim); padding: 10px 6px; text-align: center; border-bottom: 1px solid var(--line); }
+  td { padding: 14px 6px; text-align: center; border-bottom: 1px solid var(--line); font-size: 15px; }
+  th:first-child, td:first-child { width: 34px; text-align: left; padding-left: 0; color: var(--dim); }
+  td.t div { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+  td.p { font-weight: 1000; font-size: 18px; } tr.first td.p, tr.first td:first-child { color: var(--turf); }
+  .note { margin: 14px 0 0; color: var(--dim); font-size: 12.5px; }
 
-  .crest { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
-           font-size: 11.5px; font-weight: 800; color: #fff; box-shadow: inset 0 0 0 2px rgb(255 255 255 / .25); }
-  .crest.lg { width: 56px; height: 56px; font-size: 20px; }
-
-  /* Standings */
-  table { width: 100%; border-collapse: collapse; font-size: 14px; }
-  th { font-size: 12px; color: var(--ink-3); font-weight: 600; padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--line); }
-  td { padding: 11px 6px; text-align: center; }
-  tr + tr td { border-top: 1px solid var(--line); }
-  th:first-child, td:first-child { padding-left: 18px; width: 28px; color: var(--ink-3); }
-  th:last-child, td:last-child { padding-right: 18px; font-weight: 800; }
-  td.team { text-align: left; } td.team div { display: flex; align-items: center; gap: 8px; font-weight: 650; }
-  .note { padding: 12px 18px 16px; font-size: 12.5px; color: var(--ink-3); border-top: 1px solid var(--line); }
-
-  /* Sheet */
-  .scrim { position: fixed; inset: 0; z-index: 40; background: rgb(5 12 9 / .5); opacity: 0; pointer-events: none; transition: opacity .2s; }
+  /* 경기 상세 */
+  .scrim { position: fixed; inset: 0; z-index: 40; background: rgb(0 0 0 / .66); opacity: 0; pointer-events: none; transition: opacity .2s; }
   .scrim.on { opacity: 1; pointer-events: auto; }
-  .sheet { position: fixed; z-index: 50; left: 0; right: 0; bottom: 0; max-height: 88dvh; overflow: auto;
-           background: var(--surface); border-radius: 20px 20px 0 0; transform: translateY(105%);
-           transition: transform .32s cubic-bezier(.16, 1, .3, 1); padding-bottom: env(safe-area-inset-bottom); }
+  .sheet { position: fixed; z-index: 50; background: var(--soft); border: 1px solid var(--line); overflow: auto; transition: transform .3s cubic-bezier(.16, 1, .3, 1); left: 0; right: 0; bottom: 0; max-height: 90dvh; transform: translateY(105%); padding-bottom: env(safe-area-inset-bottom); }
   .sheet.on { transform: none; }
-  @media (min-width: 768px) {
-    .sheet { left: 50%; right: auto; bottom: auto; top: 50%; width: 560px; border-radius: 20px;
-             transform: translate(-50%, -46%); opacity: 0; pointer-events: none; transition: transform .25s, opacity .2s; }
-    .sheet.on { transform: translate(-50%, -50%); opacity: 1; pointer-events: auto; }
-  }
+  @media (min-width: 768px) { .sheet { left: auto; top: 0; bottom: 0; right: 0; width: 520px; max-height: none; transform: translateX(105%); } }
   @media (prefers-reduced-motion: reduce) { .sheet, .scrim { transition: none; } }
-  .grab { width: 40px; height: 4px; border-radius: 4px; background: var(--line); margin: 10px auto 0; }
-  @media (min-width: 768px) { .grab { display: none; } }
-  .sh-top { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px 0 18px; font-size: 13px; color: var(--ink-3); }
-  .close { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; color: var(--ink-2); }
-  .close:hover { background: var(--surface-2); }
-  .mh { display: grid; grid-template-columns: 1fr auto 1fr; align-items: start; gap: 8px; padding: 14px 18px 18px; text-align: center; }
-  .mh .t { display: grid; justify-items: center; gap: 8px; font-weight: 700; font-size: 15px; }
-  .mh .big { font-size: 40px; font-weight: 800; letter-spacing: 0.04em; line-height: 56px; }
-  .mh .stt { font-size: 12.5px; font-weight: 700; color: var(--ink-2); }
-  .mh .stt.live { color: var(--live); }
-  .scorers { font-size: 12.5px; color: var(--ink-2); font-weight: 500; line-height: 1.6; }
-  .tl { border-top: 1px solid var(--line); padding: 6px 0 18px; }
-  .ev { display: grid; grid-template-columns: 1fr 64px 1fr; align-items: center; padding: 7px 18px; font-size: 14px; }
-  .ev .min { text-align: center; font-weight: 700; color: var(--ink-2); font-size: 13px; }
-  .ev .l { text-align: right; } .ev .r { text-align: left; }
-  .ev .who { display: inline-flex; align-items: center; gap: 7px; }
-  .ev .l .who { flex-direction: row-reverse; }
-  .ev small { display: block; color: var(--ink-3); font-size: 12px; }
-  .ev.cancel .who b { text-decoration: line-through; color: var(--ink-3); font-weight: 500; }
-  .ic-goal { color: var(--ink); font-size: 17px; }
-  .card { display: inline-block; width: 11px; height: 15px; border-radius: 2px; }
-  .card.y { background: var(--yellow); } .card.r { background: var(--red); }
-  .run { font-weight: 800; }
-  .divider { display: flex; align-items: center; gap: 10px; padding: 10px 18px; font-size: 12px; font-weight: 700; color: var(--ink-3); }
-  .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
-  .empty { padding: 26px 18px 30px; text-align: center; color: var(--ink-3); font-size: 14px; }
-  .empty i { display: block; font-size: 26px; margin-bottom: 6px; }
-
-  /* Skeleton */
-  .sk { height: 58px; margin: 0 18px; border-radius: 10px; background: linear-gradient(90deg, var(--surface-2), var(--line), var(--surface-2));
-        background-size: 200% 100%; }
-  .sk + .sk { margin-top: 10px; }
-  @media (prefers-reduced-motion: no-preference) { .sk { animation: sh 1.4s linear infinite; } }
-  @keyframes sh { to { background-position: -200% 0; } }
-
-  footer { max-width: 1120px; margin: 0 auto; padding: 0 16px 40px; font-size: 12.5px; color: var(--ink-3); display: flex; flex-wrap: wrap; gap: 6px 16px; }
-  footer a { color: var(--ink-2); }
-  @media (max-width: 420px) {
-    .row { grid-template-columns: 42px minmax(0, 1fr) 58px minmax(0, 1fr); gap: 7px; padding: 13px 12px; }
-    .chev { display: none; }
-    .side { gap: 6px; font-size: 14.5px; }
-    .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
+  .sh-top { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px 14px 24px; border-bottom: 1px solid var(--line); color: var(--muted); }
+  .mh { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; padding: 32px 24px 28px; text-align: center; align-items: start; border-bottom: 1px solid var(--line); }
+  .mh .t { display: grid; justify-items: center; gap: 10px; font-weight: 800; font-size: 17px; }
+  .mh .big { font-size: 64px; font-weight: 1000; letter-spacing: -0.05em; line-height: 64px; }
+  .mh .big.pre { font-size: 28px; color: var(--muted); }
+  .scorers { font-size: 12.5px; font-weight: 500; color: var(--muted); line-height: 1.7; }
+  .div { display: flex; align-items: center; gap: 12px; padding: 18px 24px 8px; color: var(--dim); }
+  .div::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .ev { display: grid; grid-template-columns: 1fr 56px 1fr; align-items: center; padding: 9px 24px; }
+  .ev .min { text-align: center; font-family: var(--mono); font-weight: 700; font-size: 13px; color: var(--muted); }
+  .ev .l { text-align: right; } .ev .who { display: inline-flex; align-items: center; gap: 9px; font-weight: 700; }
+  .ev .l .who { flex-direction: row-reverse; } .ev small { display: block; font-weight: 500; color: var(--muted); font-size: 12px; }
+  .ev .ic { color: var(--turf); font-size: 18px; } .ev.cancel .who b { text-decoration: line-through; color: var(--dim); }
+  .card { width: 11px; height: 15px; display: inline-block; } .card.y { background: #f2c230; } .card.r { background: #e5483d; }
+  .acc { padding: 22px 24px 28px; }
 </style>
 </head>
 <body>
-<header class="bar"><div class="bar-in">
-  <div class="mark" aria-hidden="true">R</div>
-  <div class="brand">리본 유소년축구 허브</div>
-  <span class="demo-tag">데모 · 조회 전용</span>
+<div class="util"><div class="wrap">
+  <span class="mono">Re:born Corporation Lab / Youth Football Hub</span>
+  <span class="chip on"><span class="dot"></span>조회 전용 데모</span>
+</div></div>
+<header class="nav"><div class="wrap">
+  <a class="logo" href="#top" aria-label="Re:born">Re<i>:</i>born</a>
+  <a class="l" href="#matches">경기</a><a class="l" href="#standings">순위</a>
+  <a class="l opt" id="adminLink" href="admin.html" hidden>관리자</a>
+  <a class="l opt sp" href="/docs" id="docsLink">API</a>
 </div></header>
 
-<section class="hero">
-  <div class="hero-img" id="heroImg"></div>
-  <div class="hero-in">
-    <h1 id="tname">대회 정보를 불러오는 중</h1>
-    <div class="hero-meta" id="tmeta"></div>
-    <div class="facts" id="facts"></div>
+<section class="hero" id="top">
+  <div class="hero-photo" id="heroImg"></div>
+  <div class="wrap">
+    <p class="kicker">현장의 모든 득점을 기록으로 남깁니다</p>
+    <h1 class="display">EVERY GOAL,<br><mark>ON RECORD.</mark></h1>
+    <p class="lead">경기 일정부터 실시간 스코어, <b>득점·경고·정정 기록</b>까지 한곳에서 확인하세요.</p>
+    <div class="tour" id="tour"><h2 id="tname">불러오는 중</h2></div>
   </div>
 </section>
+<div class="stats" id="stats"></div>
 
-<main>
-  <section class="panel" aria-labelledby="mh">
-    <div class="panel-h">
-      <h2 id="mh">경기</h2>
-      <div class="seg" role="group" aria-label="경기 필터">
-        <button data-f="all" aria-pressed="true">전체</button>
-        <button data-f="live" aria-pressed="false">진행 중</button>
-        <button data-f="done" aria-pressed="false">종료</button>
+<main class="wrap">
+  <div class="cols">
+    <section id="matches" aria-labelledby="mh">
+      <div class="sec-h">
+        <h2 class="display" id="mh">MATCHES</h2>
+        <div class="seg" role="group" aria-label="경기 필터">
+          <button data-f="all" aria-pressed="true">전체</button><button data-f="live" aria-pressed="false">진행 중</button><button data-f="done" aria-pressed="false">종료</button>
+        </div>
       </div>
-    </div>
-    <div id="list"><div class="sk"></div><div class="sk"></div><div class="sk" style="margin-bottom:18px"></div></div>
-  </section>
-
-  <aside class="panel" aria-labelledby="sh">
-    <div class="panel-h"><h2 id="sh">순위</h2></div>
-    <div id="table"></div>
-    <div class="note">종료 및 결과 확정 경기 기준. 승 3점, 무 1점.</div>
-  </aside>
+      <div id="list"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
+    </section>
+    <section id="standings" aria-labelledby="sh">
+      <div class="sec-h"><h2 class="display" id="sh">TABLE</h2></div>
+      <div id="table"></div>
+      <p class="note">종료 및 결과 확정 경기 기준. 승 3점, 무 1점.</p>
+    </section>
+  </div>
 </main>
 
-<footer>
+<footer class="foot"><div class="wrap">
   <span>가상의 팀과 선수로 구성된 시연용 데이터입니다.</span>
-  <span id="updated"></span>
-  
-</footer>
+  <span class="mono" id="updated"></span>
+</div></footer>
 
 <div class="scrim" id="scrim"></div>
-<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle"></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="경기 상세"></aside>
 
+<script src="data.js" onerror="void 0"></script>
+<script src="common.js"></script>
 <script>
-const $ = (s) => document.querySelector(s);
-const h = (tag, attrs = {}, ...kids) => {
-  const e = document.createElement(tag);
-  for (const [k, v] of Object.entries(attrs)) k === "class" ? (e.className = v) : e.setAttribute(k, v);
-  for (const c of kids.flat()) if (c != null) e.append(c.nodeType ? c : document.createTextNode(c));
-  return e;
-};
-const DATA = {"/tournaments": {"items": [{"organizer_id": "a00673aa-fe7d-45e2-9e44-009c44b2dfbb", "name": "[데모] 리본컵 U-12", "venue_text": "리본 스포츠파크", "start_date": "2026-10-17", "end_date": "2026-10-18", "age_group": "U-12", "fee_amount": 0, "format": "LEAGUE", "half_minutes": 25, "break_minutes": 10, "field_count": 2, "max_teams": 4, "record_mode": "FULL", "penalty_shootout_enabled": false, "extra_time_enabled": false, "extra_time_half_minutes": null, "stoppage_max_minutes": 10, "allow_multi_team_players": false, "result_approval_policy": "ORGANIZER", "id": "c57a1640-86e4-4b03-9548-c481897a34c3", "created_at": "2026-10-16T08:29:57.586761+00:00", "updated_at": "2026-10-16T08:29:57.644188+00:00", "status": "RUNNING"}], "total": 1, "page": 1, "page_size": 100}, "/teams": {"items": [{"organizer_id": "a00673aa-fe7d-45e2-9e44-009c44b2dfbb", "name": "리본 FC", "age_group": "U-12", "id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "created_at": "2026-10-16T08:29:57.706569+00:00", "updated_at": "2026-10-16T08:29:57.706569+00:00", "status": "ACTIVE"}, {"organizer_id": "a00673aa-fe7d-45e2-9e44-009c44b2dfbb", "name": "한강 FC", "age_group": "U-12", "id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "created_at": "2026-10-16T08:29:57.957582+00:00", "updated_at": "2026-10-16T08:29:57.957582+00:00", "status": "ACTIVE"}, {"organizer_id": "a00673aa-fe7d-45e2-9e44-009c44b2dfbb", "name": "남산 FC", "age_group": "U-12", "id": "27becd07-e942-4752-8adb-be21f6108be2", "created_at": "2026-10-16T08:29:58.147404+00:00", "updated_at": "2026-10-16T08:29:58.147404+00:00", "status": "ACTIVE"}, {"organizer_id": "a00673aa-fe7d-45e2-9e44-009c44b2dfbb", "name": "북한산 FC", "age_group": "U-12", "id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "created_at": "2026-10-16T08:29:58.355577+00:00", "updated_at": "2026-10-16T08:29:58.355577+00:00", "status": "ACTIVE"}], "total": 4, "page": 1, "page_size": 100}, "/players": {"items": [{"id": "beb930f7-24ae-4b04-af16-c532fb3f849d", "name": "김도윤", "teams": [{"id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "name": "리본 FC", "age_group": "U-12"}]}, {"id": "224feb80-0380-46f6-90e0-9749bdc85c9e", "name": "이서준", "teams": [{"id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "name": "리본 FC", "age_group": "U-12"}]}, {"id": "01412c25-97e5-4243-abe4-08c95fa09f5c", "name": "박지호", "teams": [{"id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "name": "리본 FC", "age_group": "U-12"}]}, {"id": "7ae872ed-9398-44a0-accf-10c572a0f809", "name": "최민재", "teams": [{"id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "name": "리본 FC", "age_group": "U-12"}]}, {"id": "e767c35a-4a03-44e3-947c-847ed2d7a1e4", "name": "정우진", "teams": [{"id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "name": "리본 FC", "age_group": "U-12"}]}, {"id": "6c27a846-29c3-49fc-8fba-eb633bfc1545", "name": "한지안", "teams": [{"id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "name": "한강 FC", "age_group": "U-12"}]}, {"id": "fabec368-e462-4dc7-8d09-ba8c6886c6af", "name": "오세훈", "teams": [{"id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "name": "한강 FC", "age_group": "U-12"}]}, {"id": "d312f885-42d5-426a-8812-b7b60b37a28d", "name": "윤태민", "teams": [{"id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "name": "한강 FC", "age_group": "U-12"}]}, {"id": "eff94a8a-4c7b-4f27-902d-9a60c54a8089", "name": "장하람", "teams": [{"id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "name": "한강 FC", "age_group": "U-12"}]}, {"id": "6379ef63-020b-41dc-a4d6-19e1eb77b807", "name": "임시우", "teams": [{"id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "name": "한강 FC", "age_group": "U-12"}]}, {"id": "60eda20d-bab9-4de7-b167-06401596a7d8", "name": "강예준", "teams": [{"id": "27becd07-e942-4752-8adb-be21f6108be2", "name": "남산 FC", "age_group": "U-12"}]}, {"id": "6099020c-2e5b-4b72-a648-cdf07a12cf04", "name": "조은호", "teams": [{"id": "27becd07-e942-4752-8adb-be21f6108be2", "name": "남산 FC", "age_group": "U-12"}]}, {"id": "af5a82f4-610f-4872-a36e-0b83f9d6af50", "name": "신유찬", "teams": [{"id": "27becd07-e942-4752-8adb-be21f6108be2", "name": "남산 FC", "age_group": "U-12"}]}, {"id": "fc9e774b-6150-4212-a560-3bd50e0d4d32", "name": "배건우", "teams": [{"id": "27becd07-e942-4752-8adb-be21f6108be2", "name": "남산 FC", "age_group": "U-12"}]}, {"id": "a24a895e-cc13-4c50-9c1e-82baab311c2c", "name": "홍라온", "teams": [{"id": "27becd07-e942-4752-8adb-be21f6108be2", "name": "남산 FC", "age_group": "U-12"}]}, {"id": "b6cabab3-2991-4bd4-a7ae-81100442f5ac", "name": "문지후", "teams": [{"id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "name": "북한산 FC", "age_group": "U-12"}]}, {"id": "73a3fa0e-a1af-4ea2-8f9b-816c00855961", "name": "서하준", "teams": [{"id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "name": "북한산 FC", "age_group": "U-12"}]}, {"id": "1b9e17ad-9029-48df-b02e-45670bedbd04", "name": "권도현", "teams": [{"id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "name": "북한산 FC", "age_group": "U-12"}]}, {"id": "9512c488-65fc-48cb-8d01-bf6cca770c06", "name": "송시윤", "teams": [{"id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "name": "북한산 FC", "age_group": "U-12"}]}, {"id": "949adf0e-37f9-4239-a8f1-1db60434e79f", "name": "노태오", "teams": [{"id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "name": "북한산 FC", "age_group": "U-12"}]}], "total": 20, "page": 1, "page_size": 100}, "/tournaments/c57a1640-86e4-4b03-9548-c481897a34c3/matches": {"items": [{"tournament_id": "c57a1640-86e4-4b03-9548-c481897a34c3", "home_team_id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "away_team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "scheduled_at": "2026-10-17T00:00:00+00:00", "field_no": 1, "round_label": "1라운드", "home_score": 3, "away_score": 1, "pso_home": null, "pso_away": null, "started_at": "2026-10-16T08:29:58.769767+00:00", "finished_at": "2026-10-16T08:29:58.950992+00:00", "approved_at": "2026-10-16T08:29:58.968969+00:00", "approved_by": "f634a7da-1986-4090-9eb1-956eb2a26595", "reopen_count": 0, "id": "b980846e-bc28-455d-8ae8-2617a0fb523c", "created_at": "2026-10-16T08:29:58.605333+00:00", "updated_at": "2026-10-16T08:29:58.960822+00:00", "status": "APPROVED"}, {"tournament_id": "c57a1640-86e4-4b03-9548-c481897a34c3", "home_team_id": "27becd07-e942-4752-8adb-be21f6108be2", "away_team_id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "scheduled_at": "2026-10-17T01:00:00+00:00", "field_no": 2, "round_label": "1라운드", "home_score": 2, "away_score": 1, "pso_home": null, "pso_away": null, "started_at": "2026-10-16T08:29:58.985236+00:00", "finished_at": null, "approved_at": null, "approved_by": null, "reopen_count": 0, "id": "e116d8c3-427c-4a47-9375-07901298e19e", "created_at": "2026-10-16T08:29:58.663794+00:00", "updated_at": "2026-10-16T08:29:59.030574+00:00", "status": "LIVE"}, {"tournament_id": "c57a1640-86e4-4b03-9548-c481897a34c3", "home_team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "away_team_id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "scheduled_at": "2026-10-17T02:30:00+00:00", "field_no": 2, "round_label": "2라운드", "home_score": 0, "away_score": 0, "pso_home": null, "pso_away": null, "started_at": null, "finished_at": null, "approved_at": null, "approved_by": null, "reopen_count": 0, "id": "4d462de8-ccb0-46cb-87ad-1d451674917b", "created_at": "2026-10-16T08:29:58.729815+00:00", "updated_at": "2026-10-16T08:29:58.729815+00:00", "status": "SCHEDULED"}, {"tournament_id": "c57a1640-86e4-4b03-9548-c481897a34c3", "home_team_id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "away_team_id": "27becd07-e942-4752-8adb-be21f6108be2", "scheduled_at": "2026-10-17T02:30:00+00:00", "field_no": 1, "round_label": "2라운드", "home_score": 0, "away_score": 0, "pso_home": null, "pso_away": null, "started_at": null, "finished_at": null, "approved_at": null, "approved_by": null, "reopen_count": 0, "id": "9bb842f0-2f27-4fa9-b58a-762c35098495", "created_at": "2026-10-16T08:29:58.696981+00:00", "updated_at": "2026-10-16T08:29:58.696981+00:00", "status": "SCHEDULED"}], "total": 4, "page": 1, "page_size": 100}, "/matches/b980846e-bc28-455d-8ae8-2617a0fb523c/events": {"items": [{"match_id": "b980846e-bc28-455d-8ae8-2617a0fb523c", "event_type": "GOAL", "period": 1, "minute": 12, "team_id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "player_id": "beb930f7-24ae-4b04-af16-c532fb3f849d", "scoring_team_id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:58.791191+00:00", "idempotency_key": "demo-1", "id": "7c02692b-a2fd-411c-b059-0a82a08bd5b9", "created_at": "2026-10-16T08:29:58.791191+00:00", "updated_at": "2026-10-16T08:29:58.791191+00:00", "status": "ACTIVE", "reversed": false}, {"match_id": "b980846e-bc28-455d-8ae8-2617a0fb523c", "event_type": "YELLOW", "period": 1, "minute": 16, "team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "player_id": "d312f885-42d5-426a-8812-b7b60b37a28d", "scoring_team_id": null, "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:58.829755+00:00", "idempotency_key": "demo-2", "id": "ad069b0a-448a-471e-974d-f29fc244df75", "created_at": "2026-10-16T08:29:58.829755+00:00", "updated_at": "2026-10-16T08:29:58.829755+00:00", "status": "ACTIVE", "reversed": false}, {"match_id": "b980846e-bc28-455d-8ae8-2617a0fb523c", "event_type": "GOAL", "period": 1, "minute": 20, "team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "player_id": "fabec368-e462-4dc7-8d09-ba8c6886c6af", "scoring_team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:58.848431+00:00", "idempotency_key": "demo-3", "id": "bc1c2877-fa50-4fa2-ade3-0967d2fb8cce", "created_at": "2026-10-16T08:29:58.848431+00:00", "updated_at": "2026-10-16T08:29:58.848431+00:00", "status": "ACTIVE", "reversed": false}, {"match_id": "b980846e-bc28-455d-8ae8-2617a0fb523c", "event_type": "GOAL", "period": 2, "minute": 5, "team_id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "player_id": "7ae872ed-9398-44a0-accf-10c572a0f809", "scoring_team_id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:58.868496+00:00", "idempotency_key": "demo-4", "id": "928ed058-58fc-4b56-ba7f-9c5cfaa25300", "created_at": "2026-10-16T08:29:58.868496+00:00", "updated_at": "2026-10-16T08:29:58.868496+00:00", "status": "ACTIVE", "reversed": false}, {"match_id": "b980846e-bc28-455d-8ae8-2617a0fb523c", "event_type": "GOAL", "period": 2, "minute": 14, "team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "player_id": "6c27a846-29c3-49fc-8fba-eb633bfc1545", "scoring_team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:58.887470+00:00", "idempotency_key": "demo-5", "id": "ae09b7e7-9133-4669-8bd3-374d0f4968a3", "created_at": "2026-10-16T08:29:58.887470+00:00", "updated_at": "2026-10-16T08:29:58.887470+00:00", "status": "ACTIVE", "reversed": true}, {"match_id": "b980846e-bc28-455d-8ae8-2617a0fb523c", "event_type": "REVERSAL", "period": 2, "minute": 14, "team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "player_id": null, "scoring_team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "reverses_event_id": "ae09b7e7-9133-4669-8bd3-374d0f4968a3", "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:58.908233+00:00", "idempotency_key": "demo-6", "id": "0861a810-6bfc-47c4-8683-243f717958fa", "created_at": "2026-10-16T08:29:58.908233+00:00", "updated_at": "2026-10-16T08:29:58.908233+00:00", "status": "ACTIVE", "reversed": false}, {"match_id": "b980846e-bc28-455d-8ae8-2617a0fb523c", "event_type": "OWN_GOAL", "period": 2, "minute": 18, "team_id": "7f952c85-6738-4c80-8e4f-8eeef407c668", "player_id": "6379ef63-020b-41dc-a4d6-19e1eb77b807", "scoring_team_id": "fd0ed96c-fc21-46f4-b8b9-109afa06538a", "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:58.929809+00:00", "idempotency_key": "demo-7", "id": "f1a2c846-6eb2-43db-9de7-08ef72250806", "created_at": "2026-10-16T08:29:58.929809+00:00", "updated_at": "2026-10-16T08:29:58.929809+00:00", "status": "ACTIVE", "reversed": false}], "total": 7, "page": 1, "page_size": 100}, "/matches/e116d8c3-427c-4a47-9375-07901298e19e/events": {"items": [{"match_id": "e116d8c3-427c-4a47-9375-07901298e19e", "event_type": "GOAL", "period": 1, "minute": 7, "team_id": "27becd07-e942-4752-8adb-be21f6108be2", "player_id": "60eda20d-bab9-4de7-b167-06401596a7d8", "scoring_team_id": "27becd07-e942-4752-8adb-be21f6108be2", "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:58.994475+00:00", "idempotency_key": "demo-8", "id": "791a8927-1120-4f9d-bf8a-67d7cb07de88", "created_at": "2026-10-16T08:29:58.994475+00:00", "updated_at": "2026-10-16T08:29:58.994475+00:00", "status": "ACTIVE", "reversed": false}, {"match_id": "e116d8c3-427c-4a47-9375-07901298e19e", "event_type": "GOAL", "period": 1, "minute": 15, "team_id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "player_id": "73a3fa0e-a1af-4ea2-8f9b-816c00855961", "scoring_team_id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:59.012190+00:00", "idempotency_key": "demo-9", "id": "cecdfd70-d93a-477d-90a8-b971b9dfce7d", "created_at": "2026-10-16T08:29:59.012190+00:00", "updated_at": "2026-10-16T08:29:59.012190+00:00", "status": "ACTIVE", "reversed": false}, {"match_id": "e116d8c3-427c-4a47-9375-07901298e19e", "event_type": "PENALTY_GOAL", "period": 1, "minute": 22, "team_id": "27becd07-e942-4752-8adb-be21f6108be2", "player_id": "af5a82f4-610f-4872-a36e-0b83f9d6af50", "scoring_team_id": "27becd07-e942-4752-8adb-be21f6108be2", "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:59.030574+00:00", "idempotency_key": "demo-10", "id": "62d61786-c7c3-42cb-a5cc-1ae6ef538ec9", "created_at": "2026-10-16T08:29:59.030574+00:00", "updated_at": "2026-10-16T08:29:59.030574+00:00", "status": "ACTIVE", "reversed": false}, {"match_id": "e116d8c3-427c-4a47-9375-07901298e19e", "event_type": "YELLOW", "period": 1, "minute": 24, "team_id": "6aaecaf5-f936-41c5-b5d9-7f08c9313656", "player_id": "9512c488-65fc-48cb-8d01-bf6cca770c06", "scoring_team_id": null, "reverses_event_id": null, "recorded_by": "68be5456-198e-4729-97af-e8aca13bd6af", "recorded_at": "2026-10-16T08:29:59.050481+00:00", "idempotency_key": "demo-11", "id": "696d5b78-22f8-4027-9bee-ab716b4dca9b", "created_at": "2026-10-16T08:29:59.050481+00:00", "updated_at": "2026-10-16T08:29:59.050481+00:00", "status": "ACTIVE", "reversed": false}], "total": 4, "page": 1, "page_size": 100}, "/matches/4d462de8-ccb0-46cb-87ad-1d451674917b/events": {"items": [], "total": 0, "page": 1, "page_size": 100}, "/matches/9bb842f0-2f27-4fa9-b58a-762c35098495/events": {"items": [], "total": 0, "page": 1, "page_size": 100}};
-const api = async (p) => { const d = DATA[p.split('?')[0]]; if (!d) throw new Error(p); return d; };
-const TZ = { timeZone: "Asia/Seoul" };
-const day = (iso) => { const d = new Date(iso); const p = new Intl.DateTimeFormat("ko-KR", { ...TZ, month: "2-digit", day: "2-digit", weekday: "short" }).formatToParts(d);
-  const g = (t) => p.find((x) => x.type === t).value; return `${g("month")}.${g("day")}(${g("weekday")})`; };
-const hm = (iso) => new Date(iso).toLocaleTimeString("ko-KR", { ...TZ, hour: "2-digit", minute: "2-digit", hour12: false });
-const PALETTE = ["#0b7a4b", "#1f5fbf", "#c2410c", "#6b3fa0", "#0e7490", "#b4235a", "#4d7c0f", "#334155"];
-const HALF = { 1: "전반", 2: "후반", 3: "연장 전반", 4: "연장 후반" };
-const GOALS = new Set(["GOAL", "PENALTY_GOAL", "OWN_GOAL"]);
+let filter = "all", openId = null;
+const empty = (ic, text) => h("div", { class: "empty" }, icon(ic), text);
 
-let S = { t: null, teams: {}, players: {}, matches: [], events: {}, filter: "all", open: null };
-
-const crest = (id, lg) => { const t = S.teams[id] || { name: "?", color: "#64748b" };
-  return h("span", { class: "crest" + (lg ? " lg" : ""), style: `background:${t.color}`, "aria-hidden": "true" }, t.name.trim()[0]); };
-const tname = (id) => (S.teams[id] || {}).name || "";
-const status = (m) => m.status === "LIVE" ? "진행 중" : m.status === "APPROVED" ? "결과 확정" : m.status === "FINISHED" ? "종료" : m.status === "CANCELLED" ? "취소" : "예정";
-const played = (m) => m.status === "FINISHED" || m.status === "APPROVED";
-
-async function load() {
-  const [ts, teams, players] = await Promise.all([api("/tournaments?page_size=1"), api("/teams?page_size=100"), api("/players?page_size=100")]);
-  S.t = ts.items[0];
-  if (!S.t) { $("#tname").textContent = "등록된 대회가 없습니다"; $("#list").replaceChildren(empty("ph-calendar-blank", "경기 일정이 아직 없습니다.")); return; }
-  teams.items.forEach((t, i) => (S.teams[t.id] = { name: t.name, color: PALETTE[i % PALETTE.length] }));
-  players.items.forEach((p) => (S.players[p.id] = p.name));
-  S.matches = (await api(`/tournaments/${S.t.id}/matches?page_size=100`)).items
-    .sort((a, b) => a.scheduled_at.localeCompare(b.scheduled_at) || a.field_no - b.field_no);
-  const evs = await Promise.all(S.matches.map((m) => m.status === "SCHEDULED" ? { items: [] } : api(`/matches/${m.id}/events?page_size=100`)));
-  S.matches.forEach((m, i) => (S.events[m.id] = evs[i].items));
-  render();
-  $("#updated").textContent = "시연용 스냅샷";
-}
-
-function render() {
+function renderHero() {
   const t = S.t;
   $("#tname").textContent = t.name;
-  $("#tmeta").replaceChildren(
-    h("span", {}, h("i", { class: "ph ph-map-pin" }), t.venue_text),
-    h("span", {}, h("i", { class: "ph ph-calendar-blank" }), `${t.start_date.replaceAll("-", ".")} ~ ${t.end_date.slice(5).replace("-", ".")}`),
-    h("span", {}, h("i", { class: "ph ph-timer" }), `전후반 ${t.half_minutes}분`));
+  $("#tour").replaceChildren(h("h2", { id: "tname" }, t.name),
+    h("span", {}, icon("map-pin"), t.venue_text),
+    h("span", {}, icon("calendar-blank"), `${t.start_date.replaceAll("-", ".")} ~ ${t.end_date.slice(5).replace("-", ".")}`),
+    h("span", {}, icon("timer"), `전후반 각 ${t.half_minutes}분`));
   const goals = S.matches.reduce((n, m) => n + m.home_score + m.away_score, 0);
   const live = S.matches.filter((m) => m.status === "LIVE").length;
-  $("#facts").replaceChildren(...[[Object.keys(S.teams).length, "참가팀"], [S.matches.length, "경기"], [live, "진행 중"], [goals, "득점"]]
-    .map(([n, l]) => h("div", { class: "fact" }, h("b", { class: "num" }, String(n)), h("small", {}, l))));
-  renderList(); renderTable();
-  if (S.open) openMatch(S.open, true);
-}
-
-function empty(icon, text) { return h("div", { class: "empty" }, h("i", { class: "ph " + icon }), text); }
-
-function renderList() {
-  const f = S.filter;
-  const ms = S.matches.filter((m) => f === "all" || (f === "live" ? m.status === "LIVE" : played(m)));
-  if (!ms.length) return $("#list").replaceChildren(empty(f === "live" ? "ph-broadcast" : "ph-flag-checkered", f === "live" ? "지금 진행 중인 경기가 없습니다." : "종료된 경기가 없습니다."));
-  const groups = {};
-  ms.forEach((m) => (groups[`${m.round_label} · ${day(m.scheduled_at)}`] ??= []).push(m));
-  $("#list").replaceChildren(...Object.entries(groups).flatMap(([g, list]) => [h("div", { class: "round" }, g), ...list.map(row)]));
+  $("#stats").replaceChildren(...[[Object.keys(S.teams).length, "Teams", ""], [S.matches.length, "Matches", ""], [live, "Live now", "hot"], [goals, "Goals", ""]]
+    .map(([n, l, c]) => h("div", { class: "stat " + c }, h("b", { class: "num" }, String(n)), h("span", { class: "mono" }, l))));
 }
 
 function row(m) {
-  const live = m.status === "LIVE", pre = m.status === "SCHEDULED";
-  const st = h("div", { class: "st" + (live ? " live" : "") },
-    live ? [h("span", { class: "live-dot", "aria-hidden": "true" }), "LIVE"] : pre ? hm(m.scheduled_at) : played(m) ? "종료" : status(m),
-    h("br"), h("span", { style: "font-weight:500;color:var(--ink-3)" }, `${m.field_no}구장`));
+  const pre = m.status === "SCHEDULED";
   const hw = m.home_score > m.away_score, aw = m.away_score > m.home_score;
-  const sc = pre ? h("div", { class: "sc pre num" }, "vs")
-    : h("div", { class: "sc num" }, h("span", { class: played(m) ? (hw ? "w" : aw ? "l" : "") : "" }, String(m.home_score)), " : ",
-        h("span", { class: played(m) ? (aw ? "w" : hw ? "l" : "") : "" }, String(m.away_score)));
-  const b = h("button", { class: "row", "aria-label": `${tname(m.home_team_id)} 대 ${tname(m.away_team_id)}, ${status(m)}, 상세 보기` },
-    st, h("div", { class: "side home" }, h("span", {}, tname(m.home_team_id)), crest(m.home_team_id)),
-    sc, h("div", { class: "side" }, crest(m.away_team_id), h("span", {}, tname(m.away_team_id))),
-    h("i", { class: "ph ph-caret-right chev", "aria-hidden": "true" }));
+  const when = h("div", { class: "when" }, h("b", { class: "num" }, hm(m.scheduled_at)), `${m.field_no}구장`);
+  const sc = pre ? h("div", { class: "score pre" }, "VS")
+    : h("div", { class: "score num" }, h("span", { class: played(m) && aw ? "l" : "" }, String(m.home_score)), " : ", h("span", { class: played(m) && hw ? "l" : "" }, String(m.away_score)));
+  const mid = h("div", { style: "display:grid;justify-items:center;gap:8px" }, sc, statusTag(m));
+  const b = h("button", { class: "row", "aria-label": `${tname(m.home_team_id)} 대 ${tname(m.away_team_id)}, ${STATUS[m.status]}, 상세 보기` },
+    when, h("div", { class: "side home" }, h("span", {}, tname(m.home_team_id)), crest(m.home_team_id)), mid,
+    h("div", { class: "side" }, crest(m.away_team_id), h("span", {}, tname(m.away_team_id))), h("span", { class: "ring" }, icon("arrow-up-right")));
   b.addEventListener("click", () => openMatch(m.id));
   return b;
 }
 
+function renderList() {
+  const ms = S.matches.filter((m) => filter === "all" || (filter === "live" ? m.status === "LIVE" : played(m)));
+  if (!ms.length) return $("#list").replaceChildren(empty(filter === "live" ? "broadcast" : "flag-checkered", filter === "live" ? "지금 진행 중인 경기가 없습니다." : "종료된 경기가 없습니다."));
+  const g = {}; ms.forEach((m) => (g[m.round_label + "|" + day(m.scheduled_at)] ??= []).push(m));
+  $("#list").replaceChildren(...Object.entries(g).flatMap(([k, list]) => { const [r, d] = k.split("|");
+    return [h("div", { class: "round mono" }, h("span", {}, r), h("span", {}, d)), ...list.map(row)]; }));
+}
+
 function renderTable() {
-  const tb = {};
-  S.matches.forEach((m) => [m.home_team_id, m.away_team_id].forEach((id) => (tb[id] ??= { id, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0 })));
-  S.matches.filter(played).forEach((m) => {
-    const H = tb[m.home_team_id], A = tb[m.away_team_id];
-    H.p++; A.p++; H.gf += m.home_score; H.ga += m.away_score; A.gf += m.away_score; A.ga += m.home_score;
-    if (m.home_score > m.away_score) { H.w++; A.l++; } else if (m.home_score < m.away_score) { A.w++; H.l++; } else { H.d++; A.d++; }
-  });
-  const rows = Object.values(tb).map((r) => ({ ...r, gd: r.gf - r.ga, pts: r.w * 3 + r.d }))
-    .sort((a, b) => b.pts - a.pts || b.gd - a.gd || b.gf - a.gf || tname(a.id).localeCompare(tname(b.id), "ko"));
-  $("#table").replaceChildren(h("table", {},
-    h("thead", {}, h("tr", {}, ...["#", "팀", "경기", "승", "무", "패", "득실", "승점"].map((x, i) => h("th", i === 1 ? { style: "text-align:left" } : {}, x)))),
-    h("tbody", {}, ...rows.map((r, i) => h("tr", {},
-      h("td", { class: "num" }, String(i + 1)),
-      h("td", { class: "team" }, h("div", {}, crest(r.id), tname(r.id))),
-      ...[r.p, r.w, r.d, r.l].map((x) => h("td", { class: "num" }, String(x))),
-      h("td", { class: "num" }, (r.gd > 0 ? "+" : "") + r.gd),
-      h("td", { class: "num" }, String(r.pts)))))));
+  const rows = standings();
+  $("#table").replaceChildren(h("table", {}, h("thead", {}, h("tr", {}, ...["#", "Team", "P", "W", "D", "L", "GD", "Pts"].map((x, i) => h("th", i === 1 ? { style: "text-align:left" } : {}, x)))),
+    h("tbody", {}, ...rows.map((r, i) => h("tr", { class: i === 0 ? "first" : "" }, h("td", { class: "num" }, String(i + 1)),
+      h("td", { class: "t" }, h("div", {}, crest(r.id), tname(r.id))),
+      ...[r.p, r.w, r.d, r.l].map((x) => h("td", { class: "num" }, String(x))), h("td", { class: "num" }, (r.gd > 0 ? "+" : "") + r.gd), h("td", { class: "p num" }, String(r.pts)))))));
 }
 
-function evIcon(e) {
-  if (GOALS.has(e.event_type)) return h("i", { class: "ph-fill ph-soccer-ball ic-goal", "aria-hidden": "true" });
-  if (e.event_type === "YELLOW") return h("span", { class: "card y", "aria-hidden": "true" });
-  if (e.event_type === "RED") return h("span", { class: "card r", "aria-hidden": "true" });
-  return h("i", { class: "ph ph-arrows-left-right", "aria-hidden": "true" });
-}
 const SUB = { PENALTY_GOAL: "페널티킥", OWN_GOAL: "자책골", YELLOW: "경고", RED: "퇴장", SUB: "교체" };
-
+function evIcon(e) {
+  if (GOALS.has(e.event_type)) return h("i", { class: "ph-fill ph-soccer-ball ic" });
+  if (e.event_type === "YELLOW") return h("span", { class: "card y" });
+  if (e.event_type === "RED") return h("span", { class: "card r" });
+  return icon("arrows-left-right");
+}
 function openMatch(id, refresh) {
-  const m = S.matches.find((x) => x.id === id); if (!m) return;
-  S.open = id;
-  const evs = (S.events[id] || []).filter((e) => e.event_type !== "REVERSAL")
-    .sort((a, b) => a.period - b.period || a.minute - b.minute || a.recorded_at.localeCompare(b.recorded_at));
-  let hs = 0, as = 0, lastP = 0;
-  const scorers = { [m.home_team_id]: [], [m.away_team_id]: [] };
-  const lines = [];
+  const m = S.matches.find((x) => x.id === id); if (!m) return; openId = id;
+  const evs = (S.events[id] || []).filter((e) => e.event_type !== "REVERSAL").sort((a, b) => a.period - b.period || a.minute - b.minute || a.recorded_at.localeCompare(b.recorded_at));
+  let hs = 0, as = 0, lastP = 0; const scorers = { [m.home_team_id]: [], [m.away_team_id]: [] }; const lines = [];
   evs.forEach((e) => {
-    if (e.period !== lastP) { lines.push(h("div", { class: "divider" }, HALF[e.period])); lastP = e.period; }
+    if (e.period !== lastP) { lines.push(h("div", { class: "div mono" }, HALF[e.period])); lastP = e.period; }
     const goal = GOALS.has(e.event_type) && !e.reversed;
-    if (goal) { e.scoring_team_id === m.home_team_id ? hs++ : as++; scorers[e.scoring_team_id].push(`${S.players[e.player_id] || ""} ${e.minute}'${e.event_type === "OWN_GOAL" ? "(자책)" : e.event_type === "PENALTY_GOAL" ? "(PK)" : ""}`); }
+    if (goal) { e.scoring_team_id === m.home_team_id ? hs++ : as++; scorers[e.scoring_team_id].push(`${S.players[e.player_id] || ""} ${e.minute}'${e.event_type === "OWN_GOAL" ? " (자책)" : e.event_type === "PENALTY_GOAL" ? " (PK)" : ""}`); }
     const side = GOALS.has(e.event_type) ? e.scoring_team_id : e.team_id;
-    const label = h("span", {}, h("b", {}, S.players[e.player_id] || tname(e.team_id)),
-      h("small", {}, e.reversed ? "기록 정정으로 취소됨" : [SUB[e.event_type] || "", goal ? h("span", { class: "run num" }, `${SUB[e.event_type] ? "  " : ""}${hs} - ${as}`) : null]));
-    const who = h("span", { class: "who" }, evIcon(e), label);
+    const who = h("span", { class: "who" }, evIcon(e), h("span", {}, h("b", {}, S.players[e.player_id] || tname(e.team_id)),
+      h("small", {}, e.reversed ? "기록 정정으로 취소됨" : [SUB[e.event_type] || "", goal ? `${SUB[e.event_type] ? "  " : ""}${hs} - ${as}` : ""])));
     const left = side === m.home_team_id;
-    lines.push(h("div", { class: "ev" + (e.reversed ? " cancel" : "") },
-      h("div", { class: "l" }, left ? who : ""), h("div", { class: "min num" }, `${e.minute}'`), h("div", { class: "r" }, left ? "" : who)));
+    lines.push(h("div", { class: "ev" + (e.reversed ? " cancel" : "") }, h("div", { class: "l" }, left ? who : ""), h("div", { class: "min num" }, `${e.minute}'`), h("div", { class: "r" }, left ? "" : who)));
   });
-  const live = m.status === "LIVE", pre = m.status === "SCHEDULED";
+  const pre = m.status === "SCHEDULED";
   const team = (tid) => h("div", { class: "t" }, crest(tid, true), tname(tid), h("div", { class: "scorers" }, ...scorers[tid].flatMap((s) => [s, h("br")])));
   const sheet = $("#sheet");
   sheet.replaceChildren(
-    h("div", { class: "grab" }),
-    h("div", { class: "sh-top" }, h("span", { id: "sheetTitle" }, `${m.round_label} · ${day(m.scheduled_at)} ${hm(m.scheduled_at)} · ${m.field_no}구장`),
-      h("button", { class: "close", "aria-label": "닫기", id: "closeBtn" }, h("i", { class: "ph ph-x" }))),
-    h("div", { class: "mh" }, team(m.home_team_id),
-      h("div", {}, h("div", { class: "big num" }, pre ? "vs" : `${m.home_score} : ${m.away_score}`),
-        h("div", { class: "stt" + (live ? " live" : "") }, live ? [h("span", { class: "live-dot" }), "진행 중"] : status(m))),
-      team(m.away_team_id)),
-    h("div", { class: "tl" }, lines.length ? lines : empty(pre ? "ph-clock" : "ph-note-blank", pre ? `${hm(m.scheduled_at)} 경기 시작 예정입니다.` : "기록된 이벤트가 없습니다.")));
+    h("div", { class: "sh-top" }, h("span", { class: "mono" }, `${m.round_label} / ${day(m.scheduled_at)} ${hm(m.scheduled_at)} / ${m.field_no}구장`),
+      h("button", { class: "ring", "aria-label": "닫기", id: "closeBtn" }, icon("x"))),
+    h("div", { class: "mh" }, team(m.home_team_id), h("div", { style: "display:grid;gap:12px;justify-items:center" }, h("div", { class: "big num" + (pre ? " pre" : "") }, pre ? "VS" : `${m.home_score} : ${m.away_score}`), statusTag(m)), team(m.away_team_id)),
+    h("div", { class: "acc" }, lines.length ? lines : empty(pre ? "clock" : "note-blank", pre ? `${hm(m.scheduled_at)} 경기 시작 예정입니다.` : "기록된 이벤트가 없습니다.")));
   $("#closeBtn").addEventListener("click", closeMatch);
   if (!refresh) { $("#scrim").classList.add("on"); sheet.classList.add("on"); $("#closeBtn").focus(); }
 }
-function closeMatch() { S.open = null; $("#scrim").classList.remove("on"); $("#sheet").classList.remove("on"); }
+function closeMatch() { openId = null; $("#scrim").classList.remove("on"); $("#sheet").classList.remove("on"); }
 $("#scrim").addEventListener("click", closeMatch);
 document.addEventListener("keydown", (e) => e.key === "Escape" && closeMatch());
 document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
-  document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", x === b));
-  S.filter = b.dataset.f; renderList();
-}));
+  document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", x === b)); filter = b.dataset.f; renderList(); }));
 
-const img = new Image();
-img.onload = () => ($("#heroImg").style.backgroundImage = `url(${img.src})`);
-img.src = "img/hero.jpg";
-img.onerror = () => { const p = new Image(); p.onload = () => ($("#heroImg").style.backgroundImage = `url(${p.src})`); p.src = "img/hero.png"; };
-
-load().catch(() => { $("#tname").textContent = "데이터를 불러오지 못했습니다"; $("#list").replaceChildren(empty("ph-wifi-slash", "잠시 후 다시 시도해 주세요.")); });
-
+async function boot() {
+  if (!(await loadModel())) { $("#tname").textContent = "등록된 대회가 없습니다"; return $("#list").replaceChildren(empty("calendar-blank", "경기 일정이 아직 없습니다.")); }
+  renderHero(); renderList(); renderTable(); if (openId) openMatch(openId, true);
+  $("#updated").textContent = window.DATA ? "Snapshot" : "Updated " + new Date().toLocaleTimeString("ko-KR", TZ);
+}
+if (window.DATA) { $("#adminLink").hidden = false; $("#docsLink").remove(); }
+const img = new Image(); img.onload = () => ($("#heroImg").style.backgroundImage = `url(${img.src})`); img.src = "img/hero.jpg";
+boot().catch(() => { $("#tname").textContent = "데이터를 불러오지 못했습니다"; $("#list").replaceChildren(empty("wifi-slash", "잠시 후 다시 시도해 주세요.")); });
+if (!window.DATA) setInterval(() => boot().catch(() => {}), 10000);
 </script>
 </body>
 </html>
