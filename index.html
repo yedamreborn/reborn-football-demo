@@ -14,16 +14,17 @@
   .hero .wrap { position: relative; padding-top: 72px; padding-bottom: 56px; }
   .hero .kicker { font-size: clamp(16px, 2vw, 20px); font-weight: 600; margin: 0 0 28px; color: var(--ivory); }
   .hero h1 { font-size: clamp(44px, 9.5vw, 112px); }
-  .hero h1 mark { display: inline-block; margin-top: .06em; padding: .02em .14em .0; }
+  .hero h1 mark { display: inline-block; margin-top: .06em; padding: .02em .14em 0; }
   .hero .lead { margin: 28px 0 0; max-width: 560px; color: var(--muted); font-size: 16px; }
   .hero .lead b { color: var(--ivory); }
-  .tour { margin-top: 40px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 24px; padding-top: 18px; border-top: 1px solid var(--line); max-width: 640px; }
-  .tour h2 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.02em; flex: 1 1 100%; }
-  .tour span { display: inline-flex; align-items: center; gap: 7px; color: var(--muted); font-size: 14px; }
+  .now { margin-top: 36px; padding-top: 18px; border-top: 1px solid var(--line); max-width: 640px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .now .mono { color: var(--muted); margin-right: 6px; }
+  .now a { border: 1px solid var(--line); padding: 7px 12px; font-size: 13px; font-weight: 700; background: rgb(11 12 11 / .6); }
+  .now a:hover { border-color: var(--turf); color: var(--turf); }
   @media (max-width: 760px) {
-    .hero-photo { inset: auto 0 0 0; height: 42%; }
+    .hero-photo { inset: auto 0 0 0; height: 40%; }
     .hero-photo::after { background: linear-gradient(0deg, transparent 0%, var(--black) 100%); }
-    .hero .wrap { padding-bottom: 260px; padding-top: 44px; }
+    .hero .wrap { padding-bottom: 280px; padding-top: 44px; }
   }
   .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--line); }
   .stat { padding: 22px var(--pad); border-left: 1px solid var(--line); }
@@ -35,7 +36,8 @@
 
   .cols { display: grid; gap: 40px; }
   @media (min-width: 1000px) { .cols { grid-template-columns: minmax(0, 1fr) 380px; align-items: start; } }
-  .round { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--muted); margin-top: 8px; }
+  .round { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--muted); margin-top: 8px; }
+  .round span:first-child { color: var(--ivory); }
   .row { width: 100%; display: grid; grid-template-columns: 76px minmax(0, 1fr) 96px minmax(0, 1fr) 40px; align-items: center; gap: 14px; padding: 18px 0; border-bottom: 1px solid var(--line); text-align: left; transition: background .15s, padding .15s; }
   .row:hover { background: var(--soft); padding-left: 12px; padding-right: 12px; }
   .row:hover .ring { background: var(--turf); border-color: var(--turf); color: var(--turf-ink); }
@@ -57,6 +59,8 @@
   td.t div { display: flex; align-items: center; gap: 10px; font-weight: 800; }
   td.p { font-weight: 1000; font-size: 18px; } tr.first td.p, tr.first td:first-child { color: var(--turf); }
   .note { margin: 14px 0 0; color: var(--dim); font-size: 12.5px; }
+  .tt { margin: 28px 0 8px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .tt:first-child { margin-top: 0; } .tt b { font-size: 15px; font-weight: 800; } .tt .mono { color: var(--dim); }
 
   /* 경기 상세 */
   .scrim { position: fixed; inset: 0; z-index: 40; background: rgb(0 0 0 / .66); opacity: 0; pointer-events: none; transition: opacity .2s; }
@@ -65,7 +69,7 @@
   .sheet.on { transform: none; }
   @media (min-width: 768px) { .sheet { left: auto; top: 0; bottom: 0; right: 0; width: 520px; max-height: none; transform: translateX(105%); } }
   @media (prefers-reduced-motion: reduce) { .sheet, .scrim { transition: none; } }
-  .sh-top { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px 14px 24px; border-bottom: 1px solid var(--line); color: var(--muted); }
+  .sh-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px 14px 24px; border-bottom: 1px solid var(--line); color: var(--muted); }
   .mh { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; padding: 32px 24px 28px; text-align: center; align-items: start; border-bottom: 1px solid var(--line); }
   .mh .t { display: grid; justify-items: center; gap: 10px; font-weight: 800; font-size: 17px; }
   .mh .big { font-size: 64px; font-weight: 1000; letter-spacing: -0.05em; line-height: 64px; }
@@ -88,8 +92,8 @@
   <span class="chip on"><span class="dot"></span>조회 전용 데모</span>
 </div></div>
 <header class="nav"><div class="wrap">
-  <a class="logo" href="#top" aria-label="Re:born">Re<i>:</i>born</a>
-  <a class="l" href="#matches">경기</a><a class="l" href="#standings">순위</a>
+  <a class="logo" href="#top" aria-label="Re:born"><img src="img/logo.svg" alt="Re:born"></a>
+  <a class="l" href="#tournaments">대회</a><a class="l" href="#matches">경기</a><a class="l" href="#standings">순위</a>
   <a class="l opt" id="adminLink" href="admin.html" hidden>관리자</a>
   <a class="l opt sp" href="/docs" id="docsLink">API</a>
 </div></header>
@@ -99,13 +103,17 @@
   <div class="wrap">
     <p class="kicker">현장의 모든 득점을 기록으로 남깁니다</p>
     <h1 class="display">EVERY GOAL,<br><mark>ON RECORD.</mark></h1>
-    <p class="lead">경기 일정부터 실시간 스코어, <b>득점·경고·정정 기록</b>까지 한곳에서 확인하세요.</p>
-    <div class="tour" id="tour"><h2 id="tname">불러오는 중</h2></div>
+    <p class="lead">여러 대회의 일정부터 실시간 스코어, <b>득점·경고·정정 기록</b>까지 한곳에서 확인하세요.</p>
+    <div class="now" id="now"></div>
   </div>
 </section>
 <div class="stats" id="stats"></div>
 
 <main class="wrap">
+  <section id="tournaments" aria-labelledby="th">
+    <div class="sec-h"><h2 class="display" id="th">TOURNAMENTS</h2><span class="mono" id="tcount"></span></div>
+    <div class="tcards" id="tcards"><div class="sk"></div></div>
+  </section>
   <div class="cols">
     <section id="matches" aria-labelledby="mh">
       <div class="sec-h">
@@ -114,6 +122,7 @@
           <button data-f="all" aria-pressed="true">전체</button><button data-f="live" aria-pressed="false">진행 중</button><button data-f="done" aria-pressed="false">종료</button>
         </div>
       </div>
+      <div class="scope" id="scope"></div>
       <div id="list"><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
     </section>
     <section id="standings" aria-labelledby="sh">
@@ -138,17 +147,36 @@
 let filter = "all", openId = null;
 const empty = (ic, text) => h("div", { class: "empty" }, icon(ic), text);
 
+function pick(tid) { S.cur = tid; renderAll(); if (tid !== "all") document.getElementById("matches").scrollIntoView({ behavior: "smooth", block: "start" }); }
+
 function renderHero() {
-  const t = S.t;
-  $("#tname").textContent = t.name;
-  $("#tour").replaceChildren(h("h2", { id: "tname" }, t.name),
-    h("span", {}, icon("map-pin"), t.venue_text),
-    h("span", {}, icon("calendar-blank"), `${t.start_date.replaceAll("-", ".")} ~ ${t.end_date.slice(5).replace("-", ".")}`),
-    h("span", {}, icon("timer"), `전후반 각 ${t.half_minutes}분`));
-  const goals = S.matches.reduce((n, m) => n + m.home_score + m.away_score, 0);
   const live = S.matches.filter((m) => m.status === "LIVE").length;
-  $("#stats").replaceChildren(...[[Object.keys(S.teams).length, "Teams", ""], [S.matches.length, "Matches", ""], [live, "Live now", "hot"], [goals, "Goals", ""]]
+  const goals = S.matches.reduce((n, m) => n + m.home_score + m.away_score, 0);
+  $("#stats").replaceChildren(...[[S.ts.length, "Tournaments", ""], [live, "Live now", "hot"], [S.matches.length, "Matches", ""], [goals, "Goals", ""]]
     .map(([n, l, c]) => h("div", { class: "stat " + c }, h("b", { class: "num" }, String(n)), h("span", { class: "mono" }, l))));
+  const act = S.ts.filter((t) => summary(t.id).live > 0);
+  $("#now").replaceChildren(h("span", { class: "mono" }, act.length ? `Live in ${act.length} tournaments` : "No live matches"),
+    ...act.map((t) => { const a = h("a", { href: "#matches" }, short(t.name)); a.addEventListener("click", () => { S.cur = t.id; renderAll(); }); return a; }));
+}
+
+function renderCards() {
+  $("#tcount").textContent = `${S.ts.length} tournaments`;
+  $("#tcards").replaceChildren(...S.ts.map((t) => {
+    const s = summary(t.id);
+    const b = h("button", { class: "tcard", "aria-pressed": String(S.cur === t.id), "aria-label": `${t.name} 경기 보기` },
+      h("div", { class: "top" }, h("span", { class: "tag" + (t.status === "RUNNING" ? " live" : "") }, TSTATUS[t.status]), h("span", { class: "tag" }, MODE[t.record_mode])),
+      h("h3", {}, short(t.name)),
+      h("div", { class: "meta" }, h("span", {}, icon("map-pin"), t.venue_text), h("span", {}, icon("calendar-blank"), `${t.start_date.slice(5).replace("-", ".")} ~ ${t.end_date.slice(5).replace("-", ".")}  /  ${t.age_group}`)),
+      h("div", { class: "nums" }, ...[["Teams", s.teams, ""], ["Matches", s.matches, ""], ["Live", s.live, s.live ? "hot" : ""]].map(([l, n, c]) => h("div", { class: c }, h("b", { class: "num" }, String(n)), h("span", { class: "mono" }, l)))));
+    b.addEventListener("click", () => pick(S.cur === t.id ? "all" : t.id));
+    return b;
+  }));
+}
+
+function renderScope() {
+  const t = tour(S.cur);
+  const reset = h("button", { class: "link" }, "전체 대회 보기"); reset.addEventListener("click", () => pick("all"));
+  $("#scope").replaceChildren(...(S.cur === "all" ? [h("span", {}, "모든 대회의 경기를 시간순으로 보여 줍니다.")] : [h("span", {}, h("b", {}, short(t.name)), " 경기만 보는 중"), reset]));
 }
 
 function row(m) {
@@ -166,19 +194,25 @@ function row(m) {
 }
 
 function renderList() {
-  const ms = S.matches.filter((m) => filter === "all" || (filter === "live" ? m.status === "LIVE" : played(m)));
+  const ms = scoped().filter((m) => filter === "all" || (filter === "live" ? m.status === "LIVE" : played(m)));
   if (!ms.length) return $("#list").replaceChildren(empty(filter === "live" ? "broadcast" : "flag-checkered", filter === "live" ? "지금 진행 중인 경기가 없습니다." : "종료된 경기가 없습니다."));
-  const g = {}; ms.forEach((m) => (g[m.round_label + "|" + day(m.scheduled_at)] ??= []).push(m));
-  $("#list").replaceChildren(...Object.entries(g).flatMap(([k, list]) => { const [r, d] = k.split("|");
-    return [h("div", { class: "round mono" }, h("span", {}, r), h("span", {}, d)), ...list.map(row)]; }));
+  const g = {};
+  ms.forEach((m) => (g[`${m.tournament_id}|${m.round_label}|${day(m.scheduled_at)}`] ??= []).push(m));
+  $("#list").replaceChildren(...Object.entries(g).flatMap(([k, list]) => { const [tid, r, d] = k.split("|");
+    return [h("div", { class: "round mono" }, h("span", {}, S.cur === "all" ? `${short(tour(tid).name)} / ${r}` : r), h("span", {}, d)), ...list.map(row)]; }));
 }
 
-function renderTable() {
-  const rows = standings();
-  $("#table").replaceChildren(h("table", {}, h("thead", {}, h("tr", {}, ...["#", "Team", "P", "W", "D", "L", "GD", "Pts"].map((x, i) => h("th", i === 1 ? { style: "text-align:left" } : {}, x)))),
-    h("tbody", {}, ...rows.map((r, i) => h("tr", { class: i === 0 ? "first" : "" }, h("td", { class: "num" }, String(i + 1)),
+function tableFor(tid) {
+  const rows = standings(tid);
+  return h("table", {}, h("thead", {}, h("tr", {}, ...["#", "Team", "P", "W", "D", "L", "GD", "Pts"].map((x, i) => h("th", i === 1 ? { style: "text-align:left" } : {}, x)))),
+    h("tbody", {}, ...rows.map((r, i) => h("tr", { class: i === 0 && r.pts > 0 ? "first" : "" }, h("td", { class: "num" }, String(i + 1)),
       h("td", { class: "t" }, h("div", {}, crest(r.id), tname(r.id))),
-      ...[r.p, r.w, r.d, r.l].map((x) => h("td", { class: "num" }, String(x))), h("td", { class: "num" }, (r.gd > 0 ? "+" : "") + r.gd), h("td", { class: "p num" }, String(r.pts)))))));
+      ...[r.p, r.w, r.d, r.l].map((x) => h("td", { class: "num" }, String(x))), h("td", { class: "num" }, (r.gd > 0 ? "+" : "") + r.gd), h("td", { class: "p num" }, String(r.pts))))));
+}
+function renderTable() {
+  const list = S.cur === "all" ? S.ts : [tour(S.cur)];
+  $("#table").replaceChildren(...list.flatMap((t) => [h("div", { class: "tt" }, h("b", {}, short(t.name)), h("span", { class: "mono" }, `${t.age_group} / ${TSTATUS[t.status]}`)),
+    t.format === "TOURNAMENT" ? h("p", { class: "note", style: "margin:0 0 8px" }, "토너먼트 방식 대회는 순위표 대신 경기 결과로 다음 라운드가 정해집니다.") : tableFor(t.id)]));
 }
 
 const SUB = { PENALTY_GOAL: "페널티킥", OWN_GOAL: "자책골", YELLOW: "경고", RED: "퇴장", SUB: "교체" };
@@ -190,6 +224,7 @@ function evIcon(e) {
 }
 function openMatch(id, refresh) {
   const m = S.matches.find((x) => x.id === id); if (!m) return; openId = id;
+  const t = tour(m.tournament_id);
   const evs = (S.events[id] || []).filter((e) => e.event_type !== "REVERSAL").sort((a, b) => a.period - b.period || a.minute - b.minute || a.recorded_at.localeCompare(b.recorded_at));
   let hs = 0, as = 0, lastP = 0; const scorers = { [m.home_team_id]: [], [m.away_team_id]: [] }; const lines = [];
   evs.forEach((e) => {
@@ -204,12 +239,13 @@ function openMatch(id, refresh) {
   });
   const pre = m.status === "SCHEDULED";
   const team = (tid) => h("div", { class: "t" }, crest(tid, true), tname(tid), h("div", { class: "scorers" }, ...scorers[tid].flatMap((s) => [s, h("br")])));
+  const note = t.record_mode === "NONE" ? "이 대회는 스코어만 기록합니다. 개별 득점 기록은 제공되지 않습니다." : pre ? `${hm(m.scheduled_at)} 경기 시작 예정입니다.` : "기록된 이벤트가 없습니다.";
   const sheet = $("#sheet");
   sheet.replaceChildren(
-    h("div", { class: "sh-top" }, h("span", { class: "mono" }, `${m.round_label} / ${day(m.scheduled_at)} ${hm(m.scheduled_at)} / ${m.field_no}구장`),
+    h("div", { class: "sh-top" }, h("span", { class: "mono" }, `${short(t.name)} / ${m.round_label} / ${day(m.scheduled_at)} ${hm(m.scheduled_at)} / ${m.field_no}구장`),
       h("button", { class: "ring", "aria-label": "닫기", id: "closeBtn" }, icon("x"))),
     h("div", { class: "mh" }, team(m.home_team_id), h("div", { style: "display:grid;gap:12px;justify-items:center" }, h("div", { class: "big num" + (pre ? " pre" : "") }, pre ? "VS" : `${m.home_score} : ${m.away_score}`), statusTag(m)), team(m.away_team_id)),
-    h("div", { class: "acc" }, lines.length ? lines : empty(pre ? "clock" : "note-blank", pre ? `${hm(m.scheduled_at)} 경기 시작 예정입니다.` : "기록된 이벤트가 없습니다.")));
+    h("div", { class: "acc" }, lines.length ? lines : empty(t.record_mode === "NONE" ? "list-numbers" : pre ? "clock" : "note-blank", note)));
   $("#closeBtn").addEventListener("click", closeMatch);
   if (!refresh) { $("#scrim").classList.add("on"); sheet.classList.add("on"); $("#closeBtn").focus(); }
 }
@@ -219,14 +255,15 @@ document.addEventListener("keydown", (e) => e.key === "Escape" && closeMatch());
 document.querySelectorAll(".seg button").forEach((b) => b.addEventListener("click", () => {
   document.querySelectorAll(".seg button").forEach((x) => x.setAttribute("aria-pressed", x === b)); filter = b.dataset.f; renderList(); }));
 
+function renderAll() { renderHero(); renderCards(); renderScope(); renderList(); renderTable(); if (openId) openMatch(openId, true); }
 async function boot() {
-  if (!(await loadModel())) { $("#tname").textContent = "등록된 대회가 없습니다"; return $("#list").replaceChildren(empty("calendar-blank", "경기 일정이 아직 없습니다.")); }
-  renderHero(); renderList(); renderTable(); if (openId) openMatch(openId, true);
+  if (!(await loadModel())) return $("#list").replaceChildren(empty("calendar-blank", "진행 중인 대회가 아직 없습니다."));
+  renderAll();
   $("#updated").textContent = window.DATA ? "Snapshot" : "Updated " + new Date().toLocaleTimeString("ko-KR", TZ);
 }
 if (window.DATA) { $("#adminLink").hidden = false; $("#docsLink").remove(); }
 const img = new Image(); img.onload = () => ($("#heroImg").style.backgroundImage = `url(${img.src})`); img.src = "img/hero.jpg";
-boot().catch(() => { $("#tname").textContent = "데이터를 불러오지 못했습니다"; $("#list").replaceChildren(empty("wifi-slash", "잠시 후 다시 시도해 주세요.")); });
+boot().catch(() => $("#list").replaceChildren(empty("wifi-slash", "잠시 후 다시 시도해 주세요.")));
 if (!window.DATA) setInterval(() => boot().catch(() => {}), 10000);
 </script>
 </body>

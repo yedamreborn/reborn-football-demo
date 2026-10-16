@@ -23,14 +23,16 @@
   .menu span.off .tag { margin-left: auto; font-size: 10px; padding: 2px 6px; }
   @media (max-width: 959px) { .menu a, .menu span.off { border-left: 0; border-bottom: 3px solid transparent; padding: 14px 16px; } .menu a.on { border-bottom-color: var(--turf); } .menu span.off .tag { display: none; } }
   main { padding: 40px var(--pad) 80px; min-width: 0; }
-  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; padding-bottom: 28px; }
+  .head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 20px; padding-bottom: 28px; }
   .head h1 { font-size: clamp(36px, 6vw, 68px); }
   .head p { margin: 10px 0 0; color: var(--muted); }
+  .scopebox { display: grid; gap: 8px; } .scopebox label { color: var(--muted); }
   .kpis { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); }
   .kpi { padding: 22px 22px 20px; border-left: 1px solid var(--line); border-top: 1px solid var(--line); background: var(--soft); }
   .kpi:nth-child(-n+4) { border-top: 0; } .kpi:nth-child(4n+1) { border-left: 0; }
   .kpi b { display: block; font-size: clamp(36px, 4.4vw, 56px); font-weight: 1000; letter-spacing: -0.045em; line-height: 1; }
   .kpi.hot { background: var(--turf); color: var(--turf-ink); } .kpi.hot .mono { color: rgb(11 12 11 / .7); }
+  .kpi.warn b { color: var(--turf); }
   .kpi .mono { color: var(--muted); display: block; margin-top: 10px; }
   .kpi small { display: block; margin-top: 4px; color: var(--dim); font-size: 12px; }
   .kpi.hot small { color: rgb(11 12 11 / .6); }
@@ -45,20 +47,21 @@
   th { font-family: var(--mono); font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--dim); text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); background: var(--soft); white-space: nowrap; }
   td { padding: 16px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: middle; }
   tr:last-child td { border-bottom: 0; } tbody tr:hover td { background: var(--soft); }
+  tr.pick { cursor: pointer; } tr.sel td { background: var(--soft-2); } tr.sel td:first-child { box-shadow: inset 3px 0 0 var(--turf); }
   td .vs { font-weight: 800; font-size: 16px; letter-spacing: -0.02em; } td .sub { color: var(--muted); font-size: 12px; margin-top: 2px; }
   td.sc { font-weight: 1000; font-size: 22px; letter-spacing: -0.02em; white-space: nowrap; }
   .ok { color: var(--turf); display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
   .bad { color: var(--alert); display: inline-flex; align-items: center; gap: 6px; font-weight: 700; }
   .acts { display: flex; gap: 8px; } .acts .btn { padding: 7px 12px; font-size: 12px; }
-  .two { display: grid; gap: 32px; } @media (min-width: 1100px) { .two { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); } }
-  .feed { border: 1px solid var(--line); }
+  .two { display: grid; gap: 32px; } @media (min-width: 1100px) { .two { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); } }
+  .feed, .chk { border: 1px solid var(--line); }
   .it { display: grid; grid-template-columns: 84px 1fr; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
   .it:last-child { border-bottom: 0; } .it .t { font-family: var(--mono); font-size: 12px; color: var(--dim); padding-top: 2px; }
   .it b { font-weight: 700; } .it .m { color: var(--muted); font-size: 13px; margin-top: 2px; }
-  .chk { border: 1px solid var(--line); } .chk .it { grid-template-columns: 1fr auto; align-items: center; }
-  .cfg { display: grid; gap: 0; border: 1px solid var(--line); } .cfg .it { grid-template-columns: 150px 1fr; } .cfg .it .t { padding: 0; font-family: var(--sans); font-size: 13px; color: var(--muted); }
+  .chk .it { grid-template-columns: 1fr auto; align-items: center; }
   .ro { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border: 1px solid var(--line); background: var(--soft); color: var(--muted); font-size: 13.5px; margin-bottom: 28px; }
   .ro i { color: var(--turf); font-size: 18px; }
+  .rules table { min-width: 760px; }
 </style>
 </head>
 <body>
@@ -67,7 +70,7 @@
   <span class="chip on"><span class="dot"></span>조회 전용 데모</span>
 </div></div>
 <header class="nav"><div class="wrap">
-  <a class="logo" href="index.html" aria-label="Re:born">Re<i>:</i>born</a>
+  <a class="logo" href="index.html" aria-label="Re:born"><img src="img/logo.svg" alt="Re:born"></a>
   <span class="tag" style="color:var(--turf);border-color:var(--turf)">Admin</span>
   <a class="l sp" href="index.html"><span style="display:inline-flex;align-items:center;gap:8px"><i class="ph-bold ph-arrow-left"></i>공개 화면</span></a>
 </div></header>
@@ -76,6 +79,7 @@
   <aside class="side-nav"><nav class="menu" aria-label="관리자 메뉴">
     <span class="mono">Operate</span>
     <a class="on" href="#dash"><i class="ph-bold ph-squares-four"></i>대시보드</a>
+    <a href="#tournaments"><i class="ph-bold ph-trophy"></i>대회</a>
     <a href="#matches"><i class="ph-bold ph-soccer-ball"></i>경기·기록</a>
     <a href="#audit"><i class="ph-bold ph-clock-counter-clockwise"></i>활동 로그</a>
     <span class="mono">Next</span>
@@ -88,9 +92,16 @@
   <main id="dash">
     <div class="head">
       <div><span class="mono muted" id="tour">대회 불러오는 중</span><h1 class="display">DASHBOARD</h1><p id="sub"></p></div>
+      <div class="scopebox"><label class="mono" for="scopeSel">대회 선택</label><select class="sel" id="scopeSel"></select></div>
     </div>
     <div class="ro"><i class="ph-bold ph-lock-simple"></i>시연용 조회 화면입니다. 승인과 정정 버튼은 로그인 기능이 들어오는 2차 개발에서 활성화됩니다.</div>
     <div class="kpis" id="kpis"></div>
+
+    <h2 class="blk display" id="tournaments">대회 현황 <span class="mono">Tournaments</span></h2>
+    <div class="scroll"><table>
+      <thead><tr><th>대회</th><th>상태</th><th>기록 방식</th><th>팀</th><th>경기</th><th>진행 중</th><th>승인 대기</th><th>일정</th></tr></thead>
+      <tbody id="trows"></tbody>
+    </table></div>
 
     <h2 class="blk display" id="matches">경기 현황 <span class="mono">Match operations</span></h2>
     <div class="pipe" id="pipe" aria-label="경기 상태 분포"></div>
@@ -101,9 +112,14 @@
 
     <div class="two">
       <section><h2 class="blk display" id="audit">활동 로그 <span class="mono">Audit trail</span></h2><div class="feed" id="feed"></div></section>
-      <section><h2 class="blk display">대회 설정 <span class="mono">Rules</span></h2><div class="cfg" id="cfg"></div>
-        <h2 class="blk display" style="margin-top:40px">자동 점검 <span class="mono">Checks</span></h2><div class="chk" id="chk"></div></section>
+      <section><h2 class="blk display">자동 점검 <span class="mono">Checks</span></h2><div class="chk" id="chk"></div></section>
     </div>
+
+    <h2 class="blk display">대회 규칙 <span class="mono">Rules per tournament</span></h2>
+    <div class="scroll rules"><table>
+      <thead><tr><th>대회</th><th>기록 방식</th><th>방식</th><th>전후반</th><th>추가시간</th><th>연장전</th><th>승부차기</th><th>복수팀 출전</th><th>결과 승인</th></tr></thead>
+      <tbody id="rules"></tbody>
+    </table></div>
   </main>
 </div>
 
@@ -112,56 +128,77 @@
 <script>
 const ROLE = { PLATFORM_ADMIN: "플랫폼 관리자", ORGANIZER_ADMIN: "대회 관리자", RECORDER: "기록원", COACH: "지도자" };
 const ACT = { TOURNAMENT_CREATE: "대회 생성", TOURNAMENT_TRANSITION: "대회 상태 변경", TEAM_CREATE: "팀 등록", PLAYER_CREATE: "선수 등록", MEMBERSHIP_CREATE: "팀 소속 등록",
-  ROSTER_CREATE: "대회 명단 등록", MATCH_CREATE: "경기 편성", MATCH_RECORDER_CREATE: "기록원 배정", MATCH_START: "경기 시작", MATCH_FINISH: "경기 종료", MATCH_APPROVE: "결과 승인", MATCH_EVENT_CREATE: "경기 기록 입력" };
-const MODE = { NONE: "기록 안 함 (스코어만)", GOAL: "득점 기록", FULL: "전체 기록 (경고·퇴장·교체)" };
+  ROSTER_CREATE: "대회 명단 등록", MATCH_CREATE: "경기 편성", MATCH_RECORDER_CREATE: "기록원 배정", MATCH_START: "경기 시작", MATCH_FINISH: "경기 종료", MATCH_APPROVE: "결과 승인",
+  MATCH_EVENT_CREATE: "경기 기록 입력", MATCH_SCORE_UPDATE: "스코어 입력" };
+const FORMAT = { LEAGUE: "리그", TOURNAMENT: "토너먼트", MIXED: "혼합" };
 const admin = () => (window.DATA && window.DATA["/_admin"]) || { audit: [], recorders: {} };
+const cell = (...k) => h("td", {}, ...k);
 
-function kpi(n, l, sub, hot) { return h("div", { class: "kpi" + (hot ? " hot" : "") }, h("b", { class: "num" }, String(n)), h("span", { class: "mono" }, l), sub ? h("small", {}, sub) : null); }
+function kpi(n, l, sub, cls) { return h("div", { class: "kpi " + (cls || "") }, h("b", { class: "num" }, String(n)), h("span", { class: "mono" }, l), sub ? h("small", {}, sub) : null); }
+function pickScope(id) { S.cur = id; $("#scopeSel").value = id; render(); }
 
 function render() {
-  const t = S.t, A = admin();
-  $("#tour").textContent = t.name;
-  $("#sub").textContent = `${t.venue_text}  /  ${t.start_date.replaceAll("-", ".")} ~ ${t.end_date.slice(5).replace("-", ".")}`;
-  const all = Object.values(S.events).flat(), live = S.matches.filter((m) => m.status === "LIVE").length;
-  const pending = S.matches.filter((m) => m.status === "FINISHED").length;
-  const rev = all.filter((e) => e.event_type === "REVERSAL").length;
-  const rosterN = Object.keys(S.players).length;
-  const checked = S.matches.filter((m) => m.status !== "SCHEDULED");
-  const okN = checked.filter((m) => { const [a, b] = recomputed(m); return a === m.home_score && b === m.away_score; }).length;
-  $("#kpis").replaceChildren(kpi(S.tTotal, "Tournaments", { DRAFT: "준비 중", OPEN: "접수 중", RUNNING: "진행 중", CLOSED: "종료", CANCELLED: "취소" }[t.status] || t.status), kpi(Object.keys(S.teams).length, "Teams", `정원 ${t.max_teams}팀`), kpi(rosterN, "Players", "대회 명단 기준"),
-    kpi(live, "Live matches", `예정 ${S.matches.filter((m) => m.status === "SCHEDULED").length}`, true),
-    kpi(pending, "Awaiting approval", "종료 후 승인 대기"), kpi(rev, "Corrections", "취소 이벤트 건수"), kpi(all.length, "Recorded events", "취소 포함"), kpi(`${okN}/${checked.length}`, "Score integrity", "스코어 = 기록 합계"));
+  const A = admin(), ms = scoped(), tsel = S.cur === "all" ? S.ts : [tour(S.cur)];
+  $("#tour").textContent = S.cur === "all" ? `${S.ts.length}개 대회 동시 운영` : short(tour(S.cur).name);
+  $("#sub").textContent = S.cur === "all" ? "모든 대회의 합계입니다. 대회를 선택하면 해당 대회만 보여 줍니다." : `${tour(S.cur).venue_text}  /  ${tour(S.cur).start_date.replaceAll("-", ".")} ~ ${tour(S.cur).end_date.slice(5).replace("-", ".")}`;
 
-  const cnt = (s) => S.matches.filter((m) => m.status === s).length;
+  const all = ms.flatMap((m) => S.events[m.id] || []);
+  const live = ms.filter((m) => m.status === "LIVE").length, pending = ms.filter((m) => m.status === "FINISHED").length;
+  const rev = all.filter((e) => e.event_type === "REVERSAL").length;
+  const checked = ms.filter(checkable), okN = checked.filter((m) => { const [a, b] = recomputed(m); return a === m.home_score && b === m.away_score; }).length;
+  const teamSet = new Set(ms.flatMap((m) => [m.home_team_id, m.away_team_id]));
+  $("#kpis").replaceChildren(
+    kpi(tsel.length, "Tournaments", `진행 중 ${tsel.filter((t) => t.status === "RUNNING").length}`), kpi(teamSet.size, "Teams", "경기 편성 기준"), kpi(ms.length, "Matches", `예정 ${ms.filter((m) => m.status === "SCHEDULED").length}`),
+    kpi(live, "Live matches", S.cur === "all" ? `${S.ts.filter((t) => summary(t.id).live > 0).length}개 대회에서 진행` : "", "hot"),
+    kpi(pending, "Awaiting approval", "종료 후 승인 대기", pending ? "warn" : ""), kpi(rev, "Corrections", "취소 이벤트 건수"), kpi(all.length, "Recorded events", "취소 포함"),
+    kpi(`${okN}/${checked.length}`, "Score integrity", "스코어 = 기록 합계 (스코어만 기록 대회 제외)"));
+
+  $("#trows").replaceChildren(...S.ts.map((t) => { const s = summary(t.id);
+    const r = h("tr", { class: "pick" + (S.cur === t.id ? " sel" : ""), tabindex: "0", "aria-label": `${t.name} 선택` },
+      cell(h("div", { class: "vs" }, short(t.name)), h("div", { class: "sub" }, `${t.venue_text} / ${t.age_group}`)),
+      cell(h("span", { class: "tag" + (t.status === "RUNNING" ? " live" : "") }, TSTATUS[t.status])), cell(MODE[t.record_mode]),
+      cell(String(s.teams)), cell(String(s.matches)), cell(s.live ? h("span", { class: "turf", style: "font-weight:800" }, String(s.live)) : "0"),
+      cell(s.pending ? h("span", { class: "turf", style: "font-weight:800" }, String(s.pending)) : "0"), cell(`${t.start_date.slice(5).replace("-", ".")} ~ ${t.end_date.slice(5).replace("-", ".")}`));
+    r.addEventListener("click", () => pickScope(S.cur === t.id ? "all" : t.id));
+    r.addEventListener("keydown", (e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), pickScope(S.cur === t.id ? "all" : t.id)));
+    return r; }));
+
+  const cnt = (s) => ms.filter((m) => m.status === s).length;
   $("#pipe").replaceChildren(...[["SCHEDULED", "예정", ""], ["LIVE", "진행", "live"], ["FINISHED", "종료", "done"], ["APPROVED", "확정", "done"]]
     .map(([s, l, c]) => h("div", { class: c, style: `flex:${Math.max(cnt(s), 0.4)}` }, `${l} ${cnt(s)}`)));
 
-  $("#ops").replaceChildren(...S.matches.map((m) => {
-    const evs = S.events[m.id] || [], last = evs.map((e) => e.recorded_at).sort().pop();
-    const [a, b] = recomputed(m), ok = m.status === "SCHEDULED" ? null : a === m.home_score && b === m.away_score;
+  $("#ops").replaceChildren(...ms.map((m) => {
+    const evs = S.events[m.id] || [], last = evs.map((e) => e.recorded_at).sort().pop(), mode = tour(m.tournament_id).record_mode;
+    const [a, b] = recomputed(m), ok = !checkable(m) ? null : a === m.home_score && b === m.away_score;
     return h("tr", {},
-      h("td", {}, h("div", { class: "vs" }, `${tname(m.home_team_id)} vs ${tname(m.away_team_id)}`), h("div", { class: "sub" }, `${m.round_label} / ${day(m.scheduled_at)} ${hm(m.scheduled_at)} / ${m.field_no}구장`)),
-      h("td", {}, statusTag(m)), h("td", { class: "sc num" }, m.status === "SCHEDULED" ? "-" : `${m.home_score} : ${m.away_score}`),
-      h("td", {}, A.recorders[m.id] || "-"), h("td", { class: "num" }, `${evs.length}건`), h("td", { class: "num" }, last ? hm(last) : "-"),
-      h("td", {}, ok === null ? h("span", { class: "muted" }, "대기") : ok ? h("span", { class: "ok" }, icon("check-circle", true), "일치") : h("span", { class: "bad" }, icon("warning", true), "불일치")),
-      h("td", {}, h("div", { class: "acts" }, h("button", { class: "btn", disabled: "", title: "로그인 기능 도입 후 사용 가능" }, "승인"), h("button", { class: "btn", disabled: "", title: "로그인 기능 도입 후 사용 가능" }, "정정"))));
+      cell(h("div", { class: "vs" }, `${tname(m.home_team_id)} vs ${tname(m.away_team_id)}`), h("div", { class: "sub" }, `${S.cur === "all" ? short(tour(m.tournament_id).name) + " / " : ""}${m.round_label} / ${day(m.scheduled_at)} ${hm(m.scheduled_at)} / ${m.field_no}구장`)),
+      cell(statusTag(m)), h("td", { class: "sc num" }, m.status === "SCHEDULED" ? "-" : `${m.home_score} : ${m.away_score}`),
+      cell(A.recorders[m.id] || "-"), cell(mode === "NONE" ? "스코어만" : `${evs.length}건`), cell(last ? hm(last) : "-"),
+      cell(ok === null ? h("span", { class: "muted" }, m.status === "SCHEDULED" ? "대기" : "해당 없음") : ok ? h("span", { class: "ok" }, icon("check-circle", true), "일치") : h("span", { class: "bad" }, icon("warning", true), "불일치")),
+      cell(h("div", { class: "acts" }, h("button", { class: "btn", disabled: "", title: "로그인 기능 도입 후 사용 가능" }, "승인"), h("button", { class: "btn", disabled: "", title: "로그인 기능 도입 후 사용 가능" }, "정정"))));
   }));
 
   $("#feed").replaceChildren(...(A.audit.length ? A.audit : []).map((a) => h("div", { class: "it" },
     h("div", { class: "t num" }, hms(a.at)), h("div", {}, h("b", {}, ACT[a.action] || a.action), h("div", { class: "m" }, `${a.actor_name} (${ROLE[a.actor_role] || a.actor_role})${a.n > 1 ? `  /  ${a.n}건` : ""}`)))),
     ...(A.audit.length ? [] : [h("div", { class: "empty" }, icon("clock-counter-clockwise"), "활동 기록이 없습니다.")]));
 
-  $("#cfg").replaceChildren(...[["기록 방식", MODE[t.record_mode]], ["경기 방식", { LEAGUE: "리그", TOURNAMENT: "토너먼트", MIXED: "혼합" }[t.format]], ["전후반", `${t.half_minutes}분 / 휴식 ${t.break_minutes}분`],
-    ["추가시간 한도", `${t.stoppage_max_minutes}분`], ["연장전", t.extra_time_enabled ? `사용 (${t.extra_time_half_minutes}분)` : "사용 안 함"], ["승부차기", t.penalty_shootout_enabled ? "사용" : "사용 안 함"],
-    ["복수팀 출전", t.allow_multi_team_players ? "허용" : "불가"], ["결과 승인", t.result_approval_policy === "PLATFORM" ? "플랫폼 관리자" : "대회 관리자"]]
-    .map(([k, v]) => h("div", { class: "it" }, h("div", { class: "t" }, k), h("b", {}, v))));
+  $("#rules").replaceChildren(...tsel.map((t) => h("tr", {}, cell(h("div", { class: "vs" }, short(t.name))), cell(MODE[t.record_mode]), cell(FORMAT[t.format]), cell(`${t.half_minutes}분 / 휴식 ${t.break_minutes}분`),
+    cell(`${t.stoppage_max_minutes}분`), cell(t.extra_time_enabled ? `사용 (${t.extra_time_half_minutes}분)` : "사용 안 함"), cell(t.penalty_shootout_enabled ? "사용" : "사용 안 함"),
+    cell(t.allow_multi_team_players ? "허용" : "불가"), cell(t.result_approval_policy === "PLATFORM" ? "플랫폼 관리자" : "대회 관리자"))));
 
   const dup = new Set(all.map((e) => e.idempotency_key)).size === all.length;
-  const checks = [["스코어와 기록 합계 일치", okN === checked.length], ["중복 입력 방지 키 중복 없음", dup], ["승인된 경기에 승인 시각과 승인자 기록", S.matches.filter((m) => m.status === "APPROVED").every((m) => m.approved_at && m.approved_by)],
+  const checks = [["스코어와 기록 합계 일치", okN === checked.length], ["중복 입력 방지 키 중복 없음", dup],
+    ["승인된 경기에 승인 시각과 승인자 기록", ms.filter((m) => m.status === "APPROVED").every((m) => m.approved_at && m.approved_by)],
     ["개인정보(생년월일·연락처) 공개 응답에서 제외", !JSON.stringify(window.DATA || {}).match(/birth_date|guardian_contact/)]];
   $("#chk").replaceChildren(...checks.map(([l, ok]) => h("div", { class: "it" }, h("span", {}, l), ok ? h("span", { class: "ok" }, icon("check-circle", true), "정상") : h("span", { class: "bad" }, icon("warning", true), "확인 필요"))));
 }
-loadModel().then((ok) => ok && render()).catch(() => ($("#tour").textContent = "데이터를 불러오지 못했습니다"));
+loadModel().then((ok) => {
+  if (!ok) return;
+  const sel = $("#scopeSel");
+  sel.replaceChildren(h("option", { value: "all" }, "전체 대회"), ...S.ts.map((t) => h("option", { value: t.id }, short(t.name))));
+  sel.addEventListener("change", () => pickScope(sel.value));
+  render();
+}).catch(() => ($("#tour").textContent = "데이터를 불러오지 못했습니다"));
 </script>
 </body>
 </html>
